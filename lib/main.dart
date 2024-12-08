@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'ui/orders/orders_screen.dart';
+import 'ui/screens.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -28,10 +28,36 @@ class MyApp extends StatelessWidget {
       title: 'My Shop',
       debugShowCheckedModeBanner: false,
       theme: themeData,
-      // Hiệu chỉnh trang home
-      home: const SafeArea(
-        child: OrdersScreen(),
-      ),
+      home: const ProductsOverviewScreen(),
+      // Define named routes
+      routes: {
+        CartScreen.routeName: (ctx) => const SafeArea(
+          child: CartScreen(),
+        ),
+        OrdersScreen.routeName: (ctx) => const SafeArea(
+          child: OrdersScreen(),
+        ),
+        UserProductsScreen.routeName: (ctx) => const SafeArea(
+          child: UserProductsScreen(),
+        ),
+      },
+      // Handle dynamic routing
+      onGenerateRoute: (settings) {
+        if (settings.name == ProductDetailScreen.routeName) {
+          final productId = settings.arguments as String;
+          return MaterialPageRoute(
+            settings: settings,
+            builder: (ctx) {
+              return SafeArea(
+                child: ProductDetailScreen(
+                  ProductsManager().findById(productId)!,
+                ),
+              );
+            },
+          );
+        }
+        return null;
+      },
     );
   }
 }
