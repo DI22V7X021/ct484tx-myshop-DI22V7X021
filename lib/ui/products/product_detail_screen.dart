@@ -11,34 +11,94 @@ class ProductDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(product.title),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.favorite_border),
+            onPressed: () {
+              // Handle add to favorites
+              print('Add to favorites');
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: <Widget>[
-            SizedBox(
-              height: 300,
-              width: double.infinity,
-              child: Image.network(product.imageUrl, fit: BoxFit.cover),
-            ),
+          children: [
+            Image.network(product.imageUrl),
             const SizedBox(height: 10),
             Text(
               '\$${product.price}',
-              style: const TextStyle(color: Colors.grey, fontSize: 20),
+              style: const TextStyle(
+                color: Colors.grey,
+                fontSize: 20,
+              ),
             ),
             const SizedBox(height: 10),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              width: double.infinity,
-              child: Text(
-                product.description,
-                textAlign: TextAlign.center,
-                softWrap: true,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+            Text(
+              product.description,
+              textAlign: TextAlign.center,
+              softWrap: true,
+            ),
+            const SizedBox(height: 20),
+            QuantitySelector(),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.shopping_cart),
+              label: const Text('Add to Cart'),
+              onPressed: () {
+                // Handle add to cart
+                print('Add to cart');
+              },
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class QuantitySelector extends StatefulWidget {
+  const QuantitySelector({super.key});
+
+  @override
+  _QuantitySelectorState createState() => _QuantitySelectorState();
+}
+
+class _QuantitySelectorState extends State<QuantitySelector> {
+  int _quantity = 1;
+
+  void _incrementQuantity() {
+    setState(() {
+      _quantity++;
+    });
+  }
+
+  void _decrementQuantity() {
+    if (_quantity > 1) {
+      setState(() {
+        _quantity--;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          icon: const Icon(Icons.remove),
+          onPressed: _decrementQuantity,
+        ),
+        Text(
+          '$_quantity',
+          style: const TextStyle(fontSize: 20),
+        ),
+        IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: _incrementQuantity,
+        ),
+      ],
     );
   }
 }
